@@ -2,7 +2,7 @@ using System;
 
 namespace backend.models;
 
-public class recipe
+public class Recipe
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
