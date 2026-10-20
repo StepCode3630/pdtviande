@@ -1,0 +1,46 @@
+info:
+  name: PUT Update recipe
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{host}}/api/Recipes/{{recipeId}}"
+  auth: inherit
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "id": {{recipeId}},
+        "name": "Updated test recipe",
+        "summary": "An updated test recipe",
+        "ingredients": [
+          "Beef",
+          "Rice"
+        ],
+        "instructions": [
+          "Cook the beef.",
+          "Serve with rice."
+        ]
+      }
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        if (!Number.isInteger(bru.getVar("recipeId")) || bru.getVar("recipeId") <= 0) {
+          throw new Error("Run POST Create recipe first.");
+        }
+    - type: tests
+      code: |-
+        test("Update a recipe", function () {
+          expect(res.status).to.equal(204);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: false

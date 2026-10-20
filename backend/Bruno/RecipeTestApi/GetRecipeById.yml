@@ -1,0 +1,31 @@
+info:
+  name: GET Recipe by ID
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{host}}/api/Recipes/{{recipeId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        if (!Number.isInteger(bru.getVar("recipeId")) || bru.getVar("recipeId") <= 0) {
+          throw new Error("Run POST Create recipe first.");
+        }
+    - type: tests
+      code: |-
+        test("Get a recipe by ID", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.id).to.equal(bru.getVar("recipeId"));
+          expect(res.body.name).to.equal("Bruno test recipe");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: false
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

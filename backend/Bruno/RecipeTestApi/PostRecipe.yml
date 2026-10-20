@@ -1,0 +1,48 @@
+info:
+  name: POST Create recipe
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{host}}/api/Recipes"
+  auth: inherit
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Bruno test recipe",
+        "summary": "A simple test recipe",
+        "ingredients": [
+          "Beef",
+          "Potatoes"
+        ],
+        "instructions": [
+          "Cook the beef.",
+          "Serve with potatoes."
+        ]
+      }
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        bru.setVar("recipeId", null);
+    - type: tests
+      code: |-
+        test("Create a recipe", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.id).to.be.a("number").and.to.be.greaterThan(0);
+          expect(res.body.name).to.equal("Bruno test recipe");
+        });
+        if (res.status === 201 && Number.isInteger(res.body.id) && res.body.id > 0) {
+          bru.setVar("recipeId", res.body.id);
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: false
