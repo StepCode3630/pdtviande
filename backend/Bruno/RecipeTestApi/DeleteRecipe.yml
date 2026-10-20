@@ -25,3 +25,5 @@ settings:
   encodeUrl: true
   timeout: 10000
   followRedirects: false
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
